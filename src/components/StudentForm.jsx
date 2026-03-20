@@ -2,19 +2,29 @@
 // - Encapsulation: state hidden inside component
 // - Polymorphism: add & update via props
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function StudentForm({ onSave, selected }) {
   const [name, setName] = useState(selected?.name || "");
   const [email, setEmail] = useState(selected?.email || "");
   const [enrollmentNo, setEnrollmentNo] = useState(selected?.enrollmentNo || "");
 
+  useEffect(() => {
+    setName(selected?.name || "");
+    setEmail(selected?.email || "");
+    setEnrollmentNo(selected?.enrollmentNo || "");
+  }, [selected]);
+
   const submit = () => {
+    if (!name.trim() || !email.trim() || !enrollmentNo.trim()) {
+      return;
+    }
+
     onSave({
       id: selected?.id || Date.now(),
-      name,
-      email,
-      enrollmentNo
+      name: name.trim(),
+      email: email.trim(),
+      enrollmentNo: enrollmentNo.trim()
     });
 
     setName("");
